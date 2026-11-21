@@ -8,10 +8,12 @@ include = [
 "github:please-behave/cli" = "0.18.0"
 python = "3.15.2"
 "aqua:boyter/scc" = "4.1.0"
+"aqua:lycheeverse/lychee" = "0.24.2"
+"github:rust-lang/mdBook" = "0.5.4"
 
 [tasks.format]
-description = "Format the sources (the repository has no formatter yet)"
-run = "true"
+description = "Format the repository's shell scripts"
+run = "shfmt -w scripts tests"
 
 [tasks.verify]
 description = "Run the deterministic Please Behave checks and stop at the first blocker"
@@ -20,3 +22,11 @@ run = "please run --at pre-push --checks-only --fail-fast"
 [tasks.setup]
 description = "Fetch dependencies for CI and offline Git hooks (the repository has none yet)"
 run = "true"
+
+[tasks.build]
+description = "Build the documentation and check internal links"
+run = "sh scripts/build.sh"
+
+[tasks.test-links]
+description = "Prove that broken internal links fail the documentation build"
+run = "sh tests/broken-link.sh"

@@ -6,6 +6,8 @@
 - Documentation is written in English.
 - Examples use generic placeholders and synthetic credentials. Never put real hosts, keys or machine-specific paths into them.
 - Example setups pin their container images by digest and are covered by a test.
+- The mdBook sources are in `src/`, with navigation in `src/SUMMARY.md`. Use draft entries for unwritten chapters. Use relative paths for links within the book and keep diagrams as SVG files alongside the sources.
+- mise pins mdBook and Lychee, and Renovate updates the pins. Run `mise run build` to build into `book/docs/` and check internal links offline. Run `mise run test-links` to exercise the failure path.
 
 ## GitHub issues
 

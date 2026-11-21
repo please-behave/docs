@@ -6,6 +6,9 @@
 /.codebase-memory/
 /.codebase-memory-local/
 
+# Generated mdBook site
+/book/
+
 # Local generated Git hook wrappers
 /custom-hooks/
 

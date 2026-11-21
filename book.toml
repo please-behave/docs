@@ -1,0 +1,11 @@
+[book]
+title = "Please Behave Documentation"
+language = "en"
+src = "src"
+
+[build]
+build-dir = "book/docs"
+create-missing = false
+
+[output.html]
+site-url = "/docs/"
