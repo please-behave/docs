@@ -1,0 +1,12 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    uses: christianpflugradt/please-behave-governance/.github/workflows/ci-check.yml@65311554dcbadc1dde0e5da59317532f81046201 # updates/workflows/ci
+    secrets:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

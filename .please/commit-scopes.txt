@@ -1,0 +1,6 @@
+ci
+deps
+docs
+examples
+site
+tests
