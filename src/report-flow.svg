@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="432" height="56" viewBox="0 0 432 56" style="max-width: 100%; height: auto" role="img" aria-labelledby="report-flow-title">
+  <title id="report-flow-title">The CLI sends an attestation through the gateway to the ledger, which the cockpit reads.</title>
+  <g fill="#eef4fb" stroke="#315981" stroke-width="1.5">
+    <rect x="1" y="5" width="88" height="46" rx="6"/>
+    <rect x="115" y="5" width="88" height="46" rx="6"/>
+    <rect x="229" y="5" width="88" height="46" rx="6"/>
+    <rect x="343" y="5" width="88" height="46" rx="6"/>
+  </g>
+  <path d="M94 28h15l-5-5m5 5-5 5 M208 28h15l-5-5m5 5-5 5 M322 28h15l-5-5m5 5-5 5"
+        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#14324d" font-family="sans-serif" font-size="16" font-weight="600" text-anchor="middle">
+    <text x="45" y="34">CLI</text>
+    <text x="159" y="34">Gateway</text>
+    <text x="273" y="34">Ledger</text>
+    <text x="387" y="34">Cockpit</text>
+  </g>
+</svg>
