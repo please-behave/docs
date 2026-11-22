@@ -35,7 +35,7 @@ services:
     networks: [private]
 
   gateway:
-    image: ghcr.io/please-behave/gateway:v0.2.0@sha256:6bc5311f8ea6921a96964dc386055a42a478e397f7ddcf41cb5f68fb7238a416
+    image: ghcr.io/please-behave/gateway:v0.3.0@sha256:0e617b89768514b4ac8dae05bfe2e0b41b84cb4a1c94ea8ecb850de1e114c765
     environment:
       GATEWAY_LEDGER_URL: http://ledger:8080
       GATEWAY_API_KEYS: example-ci:a46ef5f29b4b12ebe796f40df65647d444d859035d6bc8200828834c4d795e54
