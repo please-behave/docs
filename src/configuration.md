@@ -165,7 +165,7 @@ timeout_seconds = 600
 
 Checks receive no standard input and run in the project root with the permissions
 of the user who runs `please`. Resource names are the only confinement; there is no
-sandbox, so import checks only from [repositories you trust](#import-rule-sets-from-git).
+sandbox, so import checks only from [repositories you trust](external-rule-sets.md#trust-repositories).
 
 #### Command syntax
 
@@ -310,7 +310,7 @@ A `string` parameter is passed unchanged. A `file` parameter names an existing r
 file relative to the repository root and becomes its absolute path. A parameter
 without a `value` stays absent; there is no default. A Rule that is imported must
 leave `value` out, and the consuming project
-[supplies it per import](#import-rule-sets-from-git). Values are resolved just
+[supplies it per import](external-rule-sets.md#supply-parameter-values). Values are resolved just
 before the Rule runs. A missing required value, or a value that does not
 fit, makes that Rule end as `ERROR`; for a review it is a configuration error that
 blocks even when the review is not blocking. The
@@ -518,7 +518,7 @@ rules = [
 | `id` | Required | Unique set ID: 1 to 80 lowercase ASCII letters, digits, `-` or `_`, starting with a letter or digit. Independent of Rule IDs. |
 | `description` | Required | What the set is for. |
 | `run_at` | Required | Execution points of the set. |
-| `rules` | Required | Rule references, empty allowed. Local sets use Rule IDs; sets of an [import](#import-rule-sets-from-git) use Rule directories. |
+| `rules` | Required | Rule references, empty allowed. Local sets use Rule IDs; sets of an [import](external-rule-sets.md#import-rule-sets) use Rule directories. |
 
 A reference is a string or a table with `id` and an optional `run_at` that
 replaces the set's list for this reference, as `architecture-review` does above.
@@ -547,165 +547,12 @@ An execution point without Rules succeeds. `--checks-only` runs only determinist
 checks and reports selected reviews as `NOT_RUN` without calling an adapter. A plan
 needs no adapter and changes no hooks.
 
-## Import Rule Sets from Git
+## Imports
 
-Take over Rule Sets from another repository by declaring imports in
-`.please/config.toml`. Imports are allowed there only.
-
-```toml
-project = "My_App"
-
-[execution_points]
-custom = ["verify", "audit"]
-
-[[imports]]
-git = "https://git.example.org/team/governance.git"
-path = "repository"
-ref = "v1.0.0"
-
-[[imports]]
-git = "https://git.example.org/team/governance.git"
-path = "software-quality"
-ref = "v1.0.0"
-
-[imports.execution_points]
-quality = "verify"
-
-[[imports]]
-git = "https://git.example.org/team/governance.git"
-path = "security"
-ref = "v2.1.0"
-
-[imports.execution_points]
-scan = "audit"
-report = "verify"
-```
-
-| Field | Required / default | Meaning |
-| --- | --- | --- |
-| `git` | Required | Repository to use: HTTP(S), SSH, SCP-style, Git protocol, file URL or a repository path relative to your project. Git's own authentication applies. |
-| `path` | Required | Directory with the set, or `"."` for the repository root. No parent components or symlinks. |
-| `ref` | Required | Branch, tag or full commit hash, 1 to 1024 bytes. |
-| `execution_points` | Optional; `{}` | Maps custom point names of the imported set to custom points you declared. |
-| `rule_parameters` | Optional; `{}` | Parameter values for imported Rules, per Rule ID. |
-
-Before the first `please sync` for a repository, review it and trust it:
-
-```sh
-please trust https://git.example.org/team/governance.git
-```
-
-Without trust, `sync` stops with an error. `please trust --list` shows trusted
-repositories and `please trust --remove` withdraws trust. Imported checks run with
-your permissions, so trust only repositories whose content you have reviewed and
-pin full commit hashes where you can: branches and tags can move when refreshed.
-
-The selected directory holds one Rule Set in `ruleset.toml` with the same four
-fields as a local set. Its `rules` name Rule directories relative to the repository
-root:
-
-```toml
-id = "security"
-description = "Check for secrets before push and in CI"
-run_at = ["pre-push", "check"]
-rules = ["rules/checks/secret-scan"]
-```
-
-Each directory must sit directly below a `checks/` or `reviews/` directory and
-contain a `rule.toml` with its resources. Several sets can reference one directory.
-Sets cannot reference other sets or your own definitions and accept no project
-settings or imports. A Rule ID must be unique within one import, but may repeat across
-imports, whose results carry distinct IDs and their source.
-
-### Map execution points
-
-An `[imports.execution_points]` table belongs to the `[[imports]]` entry directly
-above it. Its keys are custom point names of the imported set and its values are
-custom points from your own `execution_points.custom`. Built-in points are not
-allowed on either side. Points that you do not map keep their name and must be
-declared by you. Several source points can map to one target, and a Rule runs once
-there. Mapping needs no network access and changes neither the files nor the
-revision that is used.
-
-### Supply parameter values
-
-An imported Rule declares its parameters without `value`. Supply the values per
-import:
-
-```toml
-[[imports]]
-git = "https://git.example.org/team/governance.git"
-path = "repository"
-ref = "v1.0.0"
-
-[imports.rule_parameters.commit-message]
-scopes_file = "frontend/scopes.txt"
-
-[[imports]]
-git = "https://git.example.org/team/governance.git"
-path = "repository"
-ref = "v1.0.0"
-
-[imports.rule_parameters.commit-message]
-scopes_file = "backend/scopes.txt"
-```
-
-Both imports execute as separate bindings with their own values; there is no global
-parameter table. Tables are keyed by the Rule's ID, not its directory. No other
-fields or Rule overrides exist. Remove the import to stop using it.
-
-### Refresh and offline use
-
-`please sync` resolves all refs and validates every source before it records the
-result. A failed refresh keeps the previous state. Runs, hooks and plans then use the
-validated cache offline. If the state is missing or changed, or the cache is
-damaged, run `please sync` again.
-
-## Import adapter profiles from Git
-
-Adapter profiles can be distributed on their own. Declare them in
-`.please/config.toml` with their own pin:
-
-```toml
-[[adapter_imports]]
-id = "quality"
-git = "https://git.example.org/team/governance-adapters.git"
-path = "adapters/quality"
-ref = "v1.2.0"
-```
-
-| Field | Required | Meaning |
-| --- | --- | --- |
-| `id` | Yes | Profile name that reviews select with `adapter`. |
-| `git` | Yes | Repository; same forms and trust rules as for Rule Set imports. |
-| `path` | Yes | Directory with `adapter.toml` and the adapter's files. |
-| `ref` | Yes | Branch, tag or full commit hash. |
-
-The directory contains a normal `adapter.toml`:
-
-```toml
-command = "python3"
-args = ["@adapter/adapter.py"]
-timeout_seconds = 70
-
-[requirements]
-executables = ["python3"]
-env = ["QUALITY_API_KEY"]
-```
-
-You need no local `adapters/quality.toml`. Reviews select the profile with
-`adapter = "quality"`. Nothing is imported implicitly or fetched while running. All
-imports together are limited to 256. Profile IDs are global: a duplicate, also
-between a local and an imported profile, is an error and nothing is overridden.
-
-Only profile packages imported this way may use references in `command`, `args` and
-`requirements.executables`: `@adapter/` is the package directory, `@source/` the
-root of its repository and `@repo/` your project root. `@@` writes a literal
-leading `@`. Referenced paths must exist and contain no parent traversal or
-symlinks. As with checks, a resolved path stays one argument.
-
-`please sync` resolves and validates both kinds of imports without running an
-adapter. Afterwards runs use the validated cache offline.
+A project can take over Rule Sets and adapter profiles from other Git repositories
+with `[[imports]]` and `[[adapter_imports]]` in `.please/config.toml`. Imports are
+allowed there only. [External Rule Sets](external-rule-sets.md) describes how to
+declare them, trust their repositories and refresh them.
 
 ## Run context
 

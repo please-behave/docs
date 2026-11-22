@@ -7,6 +7,7 @@
     - [Configuration](configuration.md)
     - [Running rules](running-rules.md)
     - [Git hooks](git-hooks.md)
+    - [External Rule Sets](external-rule-sets.md)
   - [Gateway](gateway.md)
   - [Ledger](ledger.md)
   - [Cockpit](cockpit.md)
