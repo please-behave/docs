@@ -9,6 +9,7 @@ trap 'rm -rf "$fixture" "$log"' EXIT
 export GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null
 cd "$fixture"
 git init --quiet --template= --initial-branch=main
+git remote add origin https://git.example.invalid/team/my-app.git
 please init >/dev/null
 
 echo "Validate the My_App example rules"
@@ -28,6 +29,24 @@ rm .please/reviews/product/rule.toml.bak
 printf '# My_App\n' >README.md
 git add -A
 git -c user.name=example -c user.email=example@example.invalid commit --quiet --no-verify -m 'chore: add example'
+
+echo "Check rule versions and knowledge digests offline"
+please run --at pre-push --plan --json >"$log"
+python3 - "$log" <<'PY'
+import json
+import re
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as plan_file:
+    plan = json.load(plan_file)
+rules = {rule["id"]: rule for rule in plan["scheduled"] + plan["disabled_rules"]}
+for rule_id in ("macos-build", "my-app-product"):
+    metadata = rules[rule_id].get("rule_metadata", {})
+    if metadata.get("version") != "1.0" or not re.fullmatch(
+        r"v1:sha256:[0-9a-f]{64}", metadata.get("digest", "")
+    ):
+        raise SystemExit(f"{rule_id}: expected version 1.0 and a knowledge digest")
+PY
 
 if please run --at pre-push >"$log" 2>&1; then
   cat "$log" >&2

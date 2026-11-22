@@ -1,0 +1,9 @@
+purpose: Catch build regressions in the macOS application before pushing changes.
+problem: A broken application build delays integration and prevents teammates from testing changes.
+value: Contributors get feedback while the change is still fresh.
+conditions:
+  - statement: Xcode can compile and link the application for macOS.
+    rationale: Reviewers need a working build to exercise the application.
+limitations:
+  - This build provides no evidence about signing, packaging or runtime behavior.
+placement: Local because the Xcode project and scheme belong to this application.

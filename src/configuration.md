@@ -114,6 +114,7 @@ in `checks/`, a `[review]` table in `reviews/`.
 | Field | Required / default | Meaning |
 | --- | --- | --- |
 | `id` | Required | Unique technical identity, independent of the directory name. Checks and reviews share one ID space. |
+| `version` | Optional | Owner-assigned [rule version](#rule-version). Required for registration. |
 | `name` | Optional | Display label. Defaults to the ID. |
 | `description` | Required | What the Rule expects. |
 | `enabled` | Optional; `true` | Disabled Rules are validated and shown in plans but never run. |
@@ -126,6 +127,22 @@ An enabled Rule needs an execution point, either its own `run_at` or one from a
 Rule Set. The [Rule definition contract](https://github.com/please-behave/cli/blob/main/why/contracts/configuration/rule.md)
 and its [schema](https://github.com/please-behave/cli/blob/main/why/contracts/configuration/rule.schema.json)
 define these fields in full.
+
+### Rule version
+
+Set `version = "1.0"` in `rule.toml` to record the rule owner's version.
+Use a quoted TOML string of at most 64 characters in the form `A.B`. Each
+component is a non-negative integer written with ASCII digits and no leading
+zeros, except for zero itself. Versions compare numerically by A, then by B,
+so `"1.10"` follows `"1.2"`.
+
+Change A for a fundamental change to the rule and B for any other change.
+A version communicates the owner's judgment about the change. Execution can
+still vary with the rule's inputs, environment and tools.
+
+You can leave checks and reviews unversioned, including imported rules. To
+[register a rule version](registering-rules.md), declare a version and put a
+`rule.yaml` knowledge document beside its `rule.toml`.
 
 ### Add a check
 

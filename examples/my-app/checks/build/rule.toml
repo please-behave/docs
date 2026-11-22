@@ -1,4 +1,5 @@
 id = "macos-build"
+version = "1.0"
 description = "Build the macOS application without signing"
 enabled = false
 run_at = ["pre-push"]

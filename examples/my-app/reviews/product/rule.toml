@@ -1,4 +1,5 @@
 id = "my-app-product"
+version = "1.0"
 description = "Compare app behavior with documented expectations"
 enabled = false
 run_at = ["pre-push"]

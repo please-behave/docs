@@ -1,0 +1,10 @@
+purpose: Catch changes that contradict the application's documented behavior.
+problem: A build can succeed while the application behaves differently from what users were promised.
+value: Reviewers get concrete evidence of behavior that needs correction or a documentation update.
+conditions:
+  - statement: Changed user-visible behavior agrees with the applicable product documentation.
+    rationale: The documentation records what users should be able to rely on.
+success_criteria:
+  - Flag a documented behavior contradicted by the change and cite the supporting code and documentation.
+  - Accept a change when the available evidence shows that it preserves the documented behavior.
+placement: Local because the expectations come from this application's product documentation.

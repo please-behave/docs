@@ -56,6 +56,27 @@ fails, and decide in your workflow how to treat a delivery failure.
 See the [publish configuration contract](https://github.com/please-behave/cli/blob/main/why/contracts/configuration/project.md#publish-settings)
 and [report contract](https://github.com/please-behave/cli/blob/main/why/contracts/report/document.md#publishing-evidence).
 
+## How the cockpit verifies rule results
+
+The cockpit shows a result as **verified** when the ledger finds a registration
+with the same rule identity, version and digest. The rule identity consists of
+the source repository, the directory path within that repository and the rule
+ID. The digest identifies the registered rule details. Verification describes
+the match independently of the reported outcome, so a failed check can be
+verified.
+
+- **Unregistered** means the result carries no version or the ledger has no
+  registration for that identity and version. An unversioned rule carries no
+  version by definition. Rules defined in your own project need a registration
+  from your project's CI. A rule sourced only from a local path or file URL
+  lacks a publishable identity.
+- **Mismatch** means a registration exists for the identity and version, but
+  the reported digest differs.
+
+The ledger retains unverified results and checks them again when read. A later
+matching registration can make an earlier result verified without republishing
+the report. See [Register rule versions](registering-rules.md).
+
 ## Publish from GitHub Actions
 
 Create GitHub Actions secrets named `PLEASE_GATEWAY_URL` for the gateway
@@ -64,9 +85,9 @@ the action's `gateway-url` input and expose the key secret as the environment
 variable named by `key_env`. Add this step after checkout in your workflow.
 
 ```yaml
-- uses: please-behave/action@10dc79d3d884b81aae9baaf0a94242606419646e # publishing support
+- uses: please-behave/action@1032b7de037313d2bf54dc5d2a4a9483107e6f3f # v1.8.0
   with:
-    version: v0.20.0
+    version: v0.21.0
     checks-only: 'true'
     gateway-url: ${{ secrets.PLEASE_GATEWAY_URL }}
   env:
