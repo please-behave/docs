@@ -17,7 +17,7 @@ services:
     networks: [private]
 
   migrate:
-    image: &ledger-image ghcr.io/please-behave/ledger:v0.2.0@sha256:6ad48d4d22fb6143b3ad56e79550d776ff81ed240271fe82d2b304ebdb9b4756
+    image: &ledger-image ghcr.io/please-behave/ledger:v0.3.0@sha256:d0f50eb5a3ffbe5296da01c9de9f607735b13f2344f13f000458cba1649577ab
     command: ["migrate"]
     environment: &ledger-environment
       LEDGER_DATABASE_URL: postgresql://ledger:example-password@postgres:5432/ledger
