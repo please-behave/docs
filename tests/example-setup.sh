@@ -36,7 +36,6 @@ cat >.please/config.toml <<'EOF'
 project = "Compose example"
 
 [publish]
-gateway_url = "http://127.0.0.1:8080"
 key_env = "PLEASE_GATEWAY_KEY"
 repository = "git.example.org/team/compose-example"
 EOF
@@ -68,7 +67,7 @@ from uuid import UUID
 
 commit, *compose = sys.argv[1:]
 path = "/v0/attestations"
-gateway = "http://127.0.0.1:8080" + path
+gateway = "http://127.0.0.1:8080"
 latest = path + "/latest"
 opener = build_opener(ProxyHandler({}))
 
@@ -80,17 +79,20 @@ def read_ledger(endpoint):
     ))
 
 
-def post(key, payload):
-    request = Request(
-        gateway, data=json.dumps(payload).encode(), method="POST",
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-    )
+def response_status(request):
     try:
         with opener.open(request, timeout=5) as response:
             return response.status
     except HTTPError as error:
         with error:
             return error.code
+
+
+def post(key, payload):
+    return response_status(Request(
+        gateway + path, data=json.dumps(payload).encode(), method="POST",
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+    ))
 
 
 for attempt in range(10):
@@ -104,7 +106,9 @@ for attempt in range(10):
         time.sleep(1)
 
 assert initial == [], f"Expected an empty ledger, got {initial!r}"
-subprocess.run(["please", "publish"], check=True, timeout=30)
+assert response_status(Request(gateway + "/")) == 404, "Expected HTTP 404 at the gateway root"
+assert response_status(Request(gateway + "/readyz")) == 204, "Expected HTTP 204 from gateway readiness"
+subprocess.run(["please", "publish", "--gateway-url", gateway], check=True, timeout=30)
 
 stored = read_ledger(latest)
 assert len(stored) == 1, f"Expected one attestation, got {stored!r}"

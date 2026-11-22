@@ -3,7 +3,7 @@
 Run the gateway, ledger, cockpit, and PostgreSQL locally, then publish a CLI
 attestation and read it back from the ledger. You need Docker with the
 `docker compose` plugin, Git, and [Please Behave CLI](https://github.com/please-behave/cli/releases)
-0.19.0 or later on your `PATH`. The first startup downloads images. The
+0.20.0 or later on your `PATH`. The first startup downloads images. The
 publish and read steps use the local stack and synthetic credentials.
 
 ## Start the stack
@@ -17,11 +17,16 @@ export PLEASE_GATEWAY_KEY="$(cat example-key.txt)"
 ```
 
 Once PostgreSQL is ready, the `migrate` container applies the schema and
-exits. The ledger starts after the migration succeeds. The gateway and
-cockpit listen on host loopback ports 8080 and 8081, respectively. PostgreSQL
-and the ledger are reachable only on the private Compose network. The
-gateway configuration contains the SHA-256 hash of the example key and
-associates it with the sender `example-ci`.
+exits. The ledger starts after the migration succeeds. PostgreSQL and the
+ledger are reachable only on the private Compose network.
+
+- The gateway uses the first published port, `http://127.0.0.1:8080`. It
+  accepts attestations at `POST /v0/attestations` and serves health and
+  readiness checks at `GET /healthz` and `GET /readyz`. Unrecognized paths,
+  including `/`, return `404 Not Found`. The gateway associates the SHA-256
+  hash of the example key with the sender `example-ci`.
+- The cockpit uses the second published port, `http://127.0.0.1:8081`.
+  See [Optional GitHub sign-in](#optional-github-sign-in) for browser access.
 
 ## Publish an attestation
 
@@ -42,7 +47,6 @@ cat > .please/config.toml <<'EOF'
 project = "Compose example"
 
 [publish]
-gateway_url = "http://127.0.0.1:8080"
 key_env = "PLEASE_GATEWAY_KEY"
 repository = "git.example.org/team/compose-example"
 EOF
@@ -59,7 +63,7 @@ EOF
 git add README.md .please
 git -c user.name="Example Author" -c user.email="author@example.org" commit -m "Add example check"
 please run --at check
-please publish
+please publish --gateway-url http://127.0.0.1:8080
 ```
 
 The check passes and `please publish` reports gateway acceptance. The
