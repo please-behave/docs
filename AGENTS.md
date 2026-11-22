@@ -5,7 +5,9 @@
 - This repository holds user documentation. It explains usage and never overrides the Why artifacts of the components. If the documentation and a Why artifact differ, the Why artifact is right: investigate and fix the documentation. Purpose, principles and direction of Please Behave are in the central Why repository (https://github.com/please-behave/why).
 - Documentation is written in English.
 - Examples use generic placeholders and synthetic credentials. Never put real hosts, keys or machine-specific paths into them.
-- Example setups pin their container images by digest and are covered by a test.
+- The Docker Compose example and its synthetic sender key live in `compose/`.
+  Renovate maintains the container image digest pins. Never change the pins by hand.
+  Cover example setups with integration tests.
 - The mdBook sources are in `src/`, with navigation in `src/SUMMARY.md`. Use draft entries for unwritten chapters. Use relative paths for links within the book and keep diagrams as SVG files alongside the sources.
 - mise pins mdBook and Lychee, and Renovate updates the pins. Run `mise run build` to build into `book/docs/` and check internal links offline. Run `mise run test-links` to exercise the failure path.
 

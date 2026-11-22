@@ -7,4 +7,4 @@
   - [Gateway](gateway.md)
   - [Ledger](ledger.md)
   - [Cockpit](cockpit.md)
-- [Example setups]()
+- [Docker Compose example](example-setup.md)
