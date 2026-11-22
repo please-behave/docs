@@ -7,7 +7,6 @@ include = [
 [tools]
 "github:please-behave/cli" = "0.20.0"
 python = "3.15.2"
-"aqua:boyter/scc" = "4.1.0"
 "aqua:lycheeverse/lychee" = "0.24.2"
 "github:rust-lang/mdBook" = "0.5.4"
 

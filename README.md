@@ -1,6 +1,6 @@
 # Docs
 
-[![build](https://github.com/please-behave/docs/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/please-behave/docs/actions/workflows/ci.yml) [![license](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-3949ab.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0/) [![LOC](https://christianpflugradt.github.io/badges-and-stuff/please-behave-docs/loc.svg)](https://christianpflugradt.github.io/badges-and-stuff/)
+[![build](https://github.com/please-behave/docs/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/please-behave/docs/actions/workflows/ci.yml) [![license](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-3949ab.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0/)
 
 This repository contains the user documentation for Please Behave. Read the [published documentation](https://please-behave.github.io/docs/).
 
