@@ -1,8 +1,12 @@
 # CLI
 
-Use `please publish` to share an attestation from a local verification run
-with the [gateway](gateway.md). For installation and project setup, see the
-[CLI repository](https://github.com/please-behave/cli).
+The CLI checks your repository against the rules in `.please/`. Start with
+[Getting started](getting-started.md), write rules in the
+[configuration guide](configuration.md), run and read them in
+[Running rules](running-rules.md) and let Git run them with
+[Git hooks](git-hooks.md). Use `please publish` to share an attestation from a
+local verification run with the [gateway](gateway.md). For installation, see
+the [CLI releases](https://github.com/please-behave/cli/releases).
 
 ## Configure publication
 
@@ -24,8 +28,9 @@ to the same table.
 ## Publish a report
 
 From the Git working-tree root, run your rules and pass the gateway origin
-with `--gateway-url`. Use an HTTP or HTTPS origin without credentials, a
-query, a fragment, or a path other than `/`. Remove any existing
+with `--gateway-url`, which is required on every call. Use an HTTP or HTTPS
+origin, and HTTPS for a remote gateway. It may have a port and a trailing
+slash, but no credentials, query, fragment, or other path. Remove any existing
 `gateway_url` entry from `[publish]` when upgrading to CLI 0.20.0.
 
 ```sh
@@ -38,9 +43,15 @@ The newest saved report must have a saved Git commit and still be
 publishing settings requires a fresh run. A current report with a `FAIL` or
 `ERROR` verdict is also eligible for delivery.
 
-A successful `please publish` exit confirms gateway acceptance. The saved
+The gateway receives only the summary described in
+[Evidence and its limits](overview.md#evidence-and-its-limits); captured
+output, findings and explanations stay local. A successful `please publish`
+exit confirms gateway acceptance. The saved
 verification verdict stays as recorded by the run. On failure, read the CLI's
 diagnostic for credential, rate limit, document, gateway, or connection errors.
+The command exits with code 2 and leaves the report untouched. In CI, publish
+explicitly after you capture the exit status of the run, also when the run
+fails, and decide in your workflow how to treat a delivery failure.
 
 See the [publish configuration contract](https://github.com/please-behave/cli/blob/main/why/contracts/configuration/project.md#publish-settings)
 and [report contract](https://github.com/please-behave/cli/blob/main/why/contracts/report/document.md#publishing-evidence).
