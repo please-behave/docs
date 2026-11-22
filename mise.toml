@@ -34,3 +34,7 @@ run = "sh tests/broken-link.sh"
 [tasks.test-example]
 description = "Test the Docker Compose example with cached images"
 run = "sh tests/example-setup.sh"
+
+[tasks.test-rule-examples]
+description = "Validate the example rules and run the dummy adapter with the pinned CLI"
+run = "sh tests/rule-examples.sh"

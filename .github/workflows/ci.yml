@@ -27,3 +27,18 @@ jobs:
         run: docker compose -f compose/compose.yaml pull
       - name: Run the offline integration test
         run: mise run test-example
+  rule-examples:
+    name: Test the example rules
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Install project tools
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          experimental: true
+          version: 2026.11.11
+      - name: Run the offline example test
+        run: mise run test-rule-examples

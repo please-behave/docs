@@ -13,6 +13,7 @@
   `mise install` and `docker compose -f compose/compose.yaml pull` to prepare, then
   `mise run test-example` to run offline with synthetic credentials. The test prints
   container logs on failure and removes its containers, networks, and database volume.
+- The rule and adapter examples live in `examples/`. `mise run test-rule-examples` validates them against the pinned CLI, offline. Keep that test in step with the examples.
 - The mdBook sources are in `src/`, with navigation in `src/SUMMARY.md`. Use draft entries for unwritten chapters. Use relative paths for links within the book and keep diagrams as SVG files alongside the sources.
 - mise pins mdBook and Lychee, and Renovate updates the pins. Declare every other Please Behave repository that the book or the README links in `why/repositories.yaml`; the `why` ruleset checks the links and anchors in the Markdown sources against it, Lychee checks the rendered book. Run `mise run build` to build into `book/docs/` and check internal links offline. Run `mise run test-links` to exercise the failure path.
 

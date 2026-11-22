@@ -371,11 +371,9 @@ and nested tables and arrays are replaced as a whole. Requirements are checked
 only for selected reviews, right before the call. A missing requirement, nonzero
 exit, timeout or invalid response makes the review `ERROR`.
 
-The [adapter contract](https://github.com/please-behave/cli/tree/main/why/contracts/adapter)
-defines the request and response formats and versions. The repository of the CLI
-contains a [protocol demonstration](https://github.com/please-behave/cli/blob/main/examples/adapters/dummy.py).
-It performs no assessment and always ends as `ERROR`, so do not use it as a
-working adapter.
+The [adapter guide](adapters.md) explains the protocol, links its contracts and
+provides a dummy adapter. The dummy performs no assessment and always ends as
+`ERROR`, so do not use it as a working adapter.
 
 ### Add a review
 

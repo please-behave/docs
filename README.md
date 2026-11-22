@@ -9,6 +9,7 @@ This repository contains the user documentation for Please Behave. Read the [pub
 The book covers the CLI, gateway, ledger, and cockpit. The
 [Docker Compose walkthrough](https://please-behave.github.io/docs/example-setup.html)
 uses the stack in [`compose/`](compose/) to publish and read back an attestation.
+The dummy adapter and an illustrative project setup are in [`examples/`](examples/).
 
 The purpose and principles of Please Behave, and the requirements and decisions of each component, are in the [Why repository](https://github.com/please-behave/why).
 
