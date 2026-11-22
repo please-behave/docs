@@ -30,3 +30,7 @@ run = "sh scripts/build.sh"
 [tasks.test-links]
 description = "Prove that broken internal links fail the documentation build"
 run = "sh tests/broken-link.sh"
+
+[tasks.test-example]
+description = "Test the Docker Compose example with cached images"
+run = "sh tests/example-setup.sh"

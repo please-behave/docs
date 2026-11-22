@@ -8,6 +8,11 @@
 - The Docker Compose example and its synthetic sender key live in `compose/`.
   Renovate maintains the container image digest pins. Never change the pins by hand.
   Cover example setups with integration tests.
+- CI runs the Compose integration test as its own check. To run it locally, start Docker
+  with the Compose plugin and leave loopback ports 8080 and 8081 free. Run
+  `mise install` and `docker compose -f compose/compose.yaml pull` to prepare, then
+  `mise run test-example` to run offline with synthetic credentials. The test prints
+  container logs on failure and removes its containers, networks, and database volume.
 - The mdBook sources are in `src/`, with navigation in `src/SUMMARY.md`. Use draft entries for unwritten chapters. Use relative paths for links within the book and keep diagrams as SVG files alongside the sources.
 - mise pins mdBook and Lychee, and Renovate updates the pins. Run `mise run build` to build into `book/docs/` and check internal links offline. Run `mise run test-links` to exercise the failure path.
 

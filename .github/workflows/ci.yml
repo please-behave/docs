@@ -10,3 +10,20 @@ jobs:
     uses: christianpflugradt/please-behave-governance/.github/workflows/ci-check.yml@65311554dcbadc1dde0e5da59317532f81046201 # updates/workflows/ci
     secrets:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  example-setup:
+    name: Test the Docker Compose example
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Install project tools
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          experimental: true
+          version: 2026.11.11
+      - name: Pull pinned example images
+        run: docker compose -f compose/compose.yaml pull
+      - name: Run the offline integration test
+        run: mise run test-example
