@@ -4,6 +4,7 @@
 - [Getting started]()
 - [Components]()
   - [CLI](cli.md)
+    - [Configuration](configuration.md)
   - [Gateway](gateway.md)
   - [Ledger](ledger.md)
   - [Cockpit](cockpit.md)
