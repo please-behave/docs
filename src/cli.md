@@ -10,8 +10,8 @@ the [CLI releases](https://github.com/please-behave/cli/releases).
 
 ## Configure publication
 
-Set the name of the credential environment variable in your project's
-`.please/config.toml`.
+For API-key authentication, set the name of the credential environment
+variable in your project's `.please/config.toml`.
 
 ```toml
 [publish]
@@ -24,6 +24,24 @@ control. The CLI derives the repository identity from the host and path of
 the network Git remote named `origin`. If you use a local remote or want to
 set the identity explicitly, add `repository = "git.example.org/team/project"`
 to the same table.
+
+### Authenticate with GitHub OIDC
+
+With a CLI release that supports GitHub OIDC, set the following in
+`.please/config.toml`.
+
+```toml
+[publish]
+auth = "github-oidc"
+```
+
+Grant the GitHub Actions job or workflow `id-token: write`. With this
+permission, `please publish` and `please register` obtain a token from GitHub
+Actions without a stored API key. The gateway operator must allow the
+workflow's repository and configure the exact audience. For
+`--gateway-url https://gateway.example.org:8443/`, the audience is
+`https://gateway.example.org:8443`. The gateway rejects a
+`publish.repository` override that differs from the workflow's repository.
 
 ## Publish a report
 
@@ -79,8 +97,9 @@ the report. See [Register rule versions](registering-rules.md).
 
 ## Publish from GitHub Actions
 
-Create GitHub Actions secrets named `PLEASE_GATEWAY_URL` for the gateway
-origin and `PLEASE_GATEWAY_KEY` for the bearer key. Pass the URL secret to
+For API-key authentication, create GitHub Actions secrets named
+`PLEASE_GATEWAY_URL` for the gateway origin and `PLEASE_GATEWAY_KEY` for the
+bearer key. Pass the URL secret to
 the action's `gateway-url` input and expose the key secret as the environment
 variable named by `key_env`. Add this step after checkout in your workflow.
 
@@ -98,3 +117,8 @@ The action attempts delivery after a run saves a report, including runs with
 a `FAIL` or `ERROR` verdict. Delivery failures generate a warning and a job
 summary entry. Set `publish-required: 'true'` to make a delivery failure fail
 an otherwise successful action step.
+
+For [GitHub OIDC](#authenticate-with-github-oidc), grant `id-token: write`
+and use a CLI version that supports it. After a verification run saves a
+current report, run `please publish --gateway-url https://gateway.example.org`
+from the checkout root.

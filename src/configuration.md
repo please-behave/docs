@@ -588,19 +588,26 @@ after the managed section of a composed hook do not receive it.
 
 ## Publish settings
 
-To send attestations to a [gateway](gateway.md), add the optional `[publish]` table
-to `.please/config.toml`:
+To send attestations or register rules with a [gateway](gateway.md), add the
+optional `[publish]` table to `.please/config.toml`.
 
 ```toml
 [publish]
+auth = "api-key"
 key_env = "PLEASE_GATEWAY_KEY"
 # repository = "git.example.org/team/project"
 ```
 
-`key_env` names the environment variable that holds the key; keep the value out of
-the file. `repository` sets the repository identity explicitly. Without it, the
+`auth` accepts `"api-key"` (the default) and `"github-oidc"`. With `"api-key"`,
+`key_env` names the required environment variable that holds the key. Keep the
+key itself out of the file. With `"github-oidc"`, omit `key_env` and grant the
+GitHub Actions workflow or job `id-token: write`.
+
+`repository` sets the repository identity explicitly. Without it, the
 identity is derived from the `origin` remote, so `git@git.example.org:team/project.git`
 becomes `git.example.org/team/project`. Set it if you have no network `origin`.
+For GitHub OIDC, the gateway rejects an identity that differs from the
+workflow's repository, including a conflicting `repository` override.
 The gateway address is given with `--gateway-url` and has no setting. Run again after
 you change these fields so that the report reflects the current files. The
 [CLI chapter](cli.md#configure-publication) describes publishing.

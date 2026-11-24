@@ -22,10 +22,14 @@ to fail before sending the batch.
 
 ## Run registration in CI
 
-From the checkout root, pass the gateway origin on each invocation. Have CI
-inject the bearer key into the environment variable named by `[publish].key_env`.
+From the checkout root, pass the gateway origin on each invocation. For
+API-key authentication, have CI inject the bearer key into the environment
+variable named by `[publish].key_env`. For
+[GitHub OIDC](cli.md#authenticate-with-github-oidc), set `publish.auth` to
+`"github-oidc"` and grant the workflow or job `id-token: write`.
 Registration uses the repository identity derived from the network Git
-`origin`, or the override in `[publish].repository`.
+`origin`, or the override in `[publish].repository`. With GitHub OIDC, that
+identity must match the workflow's repository.
 
 ```sh
 please register --gateway-url https://gateway.example.org
@@ -45,7 +49,7 @@ for the complete input and failure behavior.
 
 ## Register from GitHub Actions
 
-Use [Please Behave Action](https://github.com/please-behave/action/blob/main/docs/publishing.md#registering-rule-versions) v1.8.0 or
+For API-key authentication, use [Please Behave Action](https://github.com/please-behave/action/blob/main/docs/publishing.md#registering-rule-versions) v1.8.0 or
 later. Replace `main` with your default branch and the Action reference
 placeholder with your chosen release's full commit SHA. Set the gateway origin
 and bearer key as repository secrets. This example assumes
