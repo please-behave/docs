@@ -606,8 +606,9 @@ GitHub Actions workflow or job `id-token: write`.
 `repository` sets the repository identity explicitly. Without it, the
 identity is derived from the `origin` remote, so `git@git.example.org:team/project.git`
 becomes `git.example.org/team/project`. Set it if you have no network `origin`.
-For GitHub OIDC, the gateway rejects an identity that differs from the
-workflow's repository, including a conflicting `repository` override.
+For GitHub OIDC, the CLI lowercases the whole identity. The gateway rejects an
+identity that differs from the workflow's repository, including a conflicting
+`repository` override. With an API key, the identity keeps its case.
 The gateway address is given with `--gateway-url` and has no setting. Run again after
 you change these fields so that the report reflects the current files. The
 [CLI chapter](cli.md#configure-publication) describes publishing.

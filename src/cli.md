@@ -40,8 +40,10 @@ permission, `please publish` and `please register` obtain a token from GitHub
 Actions without a stored API key. The gateway operator must allow the
 workflow's repository and configure the exact audience. For
 `--gateway-url https://gateway.example.org:8443/`, the audience is
-`https://gateway.example.org:8443`. The gateway rejects a
-`publish.repository` override that differs from the workflow's repository.
+`https://gateway.example.org:8443`. With GitHub OIDC, the CLI lowercases the whole repository identity, so
+`Owner/Project` is sent as `github.com/owner/project`, matching the sender the
+gateway derives. The gateway rejects a `publish.repository` override that
+differs from the workflow's repository.
 
 ## Publish a report
 

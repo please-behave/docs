@@ -29,7 +29,7 @@ variable named by `[publish].key_env`. For
 `"github-oidc"` and grant the workflow or job `id-token: write`.
 Registration uses the repository identity derived from the network Git
 `origin`, or the override in `[publish].repository`. With GitHub OIDC, that
-identity must match the workflow's repository.
+identity is lowercased in full and must match the workflow's repository.
 
 ```sh
 please register --gateway-url https://gateway.example.org
