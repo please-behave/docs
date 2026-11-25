@@ -95,7 +95,7 @@ verified.
 
 The ledger retains unverified results and checks them again when read. A later
 matching registration can make an earlier result verified without republishing
-the report. See [Register rule versions](registering-rules.md).
+the report. See [Register rule and Rule Set versions](registering-rules.md).
 
 ## Publish from GitHub Actions
 

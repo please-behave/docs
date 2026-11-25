@@ -2,7 +2,7 @@
 
 Please Behave reads everything it enforces from the `.please/` directory at the
 root of your Git working tree. This guide describes the files in it and how to
-write them. It covers CLI 0.20.0. The binding definitions are the
+write them. The binding definitions are the
 [configuration contracts](https://github.com/please-behave/cli/tree/main/why/contracts/configuration)
 in the CLI repository; if this guide and a contract differ, the contract is right.
 
@@ -52,7 +52,8 @@ to skip the question. The
 [discovery contract](https://github.com/please-behave/cli/blob/main/why/contracts/configuration/discovery.md)
 defines the recognized locations, size limits and safe paths. Documents are UTF-8
 TOML, unknown fields are rejected and symlinks inside `.please/` are not followed.
-The files have no version field.
+Rule and Rule Set `version` fields identify owner-assigned versions of those
+definitions.
 
 ## Project settings
 
@@ -520,6 +521,7 @@ A Rule Set assigns Rules to execution points. Create `.please/rule-sets/reposito
 
 ```toml
 id = "repository"
+name = "Repository governance"
 description = "General repository governance"
 run_at = ["pre-push", "check"]
 rules = [
@@ -531,13 +533,17 @@ rules = [
 | Field | Required / default | Meaning |
 | --- | --- | --- |
 | `id` | Required | Unique set ID: 1 to 80 lowercase ASCII letters, digits, `-` or `_`, starting with a letter or digit. Independent of Rule IDs. |
-| `name` | Optional | Display label, using the ID as the fallback. Use 1 to 80 characters with no control characters or surrounding whitespace. |
+| `name` | Optional | Display label, using the ID as the fallback. Use 1 to 80 Unicode characters with no control characters or surrounding whitespace. |
+| `version` | Optional | Owner-assigned set version in the [Rule version format](#rule-version). Required for registration. |
 | `description` | Required | What the set is for. |
 | `run_at` | Required | Execution points of the set. |
 | `rules` | Required | Rule references, empty allowed. Local sets use Rule IDs; sets of an [import](external-rule-sets.md#import-rule-sets) use Rule directories. |
 
-The set ID stays the technical identifier. The display label does not affect
-references, selection, ordering, execution or rule digests.
+CLI v0.23.0 introduced display names for local and imported Rule Sets. The set
+ID remains the technical identifier. Changing the label preserves references,
+selection, ordering, execution and rule digests.
+See the [display name contract](https://github.com/please-behave/cli/blob/main/why/contracts/configuration/discovery.md#rule-set-display-names)
+and the [registration guide](registering-rules.md#prepare-the-repository).
 
 A reference is a string or a table with `id` and an optional `run_at` that
 replaces the set's list for this reference, as `architecture-review` does above.
