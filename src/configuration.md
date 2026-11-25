@@ -531,9 +531,13 @@ rules = [
 | Field | Required / default | Meaning |
 | --- | --- | --- |
 | `id` | Required | Unique set ID: 1 to 80 lowercase ASCII letters, digits, `-` or `_`, starting with a letter or digit. Independent of Rule IDs. |
+| `name` | Optional | Display label, using the ID as the fallback. Use 1 to 80 characters with no control characters or surrounding whitespace. |
 | `description` | Required | What the set is for. |
 | `run_at` | Required | Execution points of the set. |
 | `rules` | Required | Rule references, empty allowed. Local sets use Rule IDs; sets of an [import](external-rule-sets.md#import-rule-sets) use Rule directories. |
+
+The set ID stays the technical identifier. The display label does not affect
+references, selection, ordering, execution or rule digests.
 
 A reference is a string or a table with `id` and an optional `run_at` that
 replaces the set's list for this reference, as `architecture-review` does above.

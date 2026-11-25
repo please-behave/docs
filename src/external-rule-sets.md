@@ -75,8 +75,8 @@ command = "sh @rule/index.sh"
 test -s CHANGELOG.md
 ```
 
-A Rule Set has the same four fields as a [local one](configuration.md#rule-sets),
-with these differences:
+A Rule Set uses the same fields as a [local one](configuration.md#rule-sets),
+including the optional `name` display label. Imports use these conventions:
 
 - `rules` entries are Rule directories relative to the **repository root**, not
   Rule IDs and not paths relative to the set. Each directory must sit directly
