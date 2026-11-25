@@ -7,6 +7,7 @@
     - [Configuration](configuration.md)
     - [Running rules](running-rules.md)
     - [Register rule and Rule Set versions](registering-rules.md)
+    - [Record releases](recording-releases.md)
     - [Git hooks](git-hooks.md)
     - [Adapters](adapters.md)
     - [External Rule Sets](external-rule-sets.md)

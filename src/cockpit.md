@@ -28,7 +28,9 @@ a different address than the default `127.0.0.1:8080`.
 Open `/sign-in` and sign in with an allowed GitHub account. The overview
 shows the latest attestation for each repository and execution-point
 combination, with errors and failures first. Select a repository link to
-see the rule IDs, kinds, and outcomes in that attestation. Sessions expire
+see the rule IDs, kinds, and outcomes in that attestation. The Releases tab
+shows [recorded releases](recording-releases.md#view-releases-in-the-cockpit)
+with their reported evidence. Sessions expire
 after eight hours. **Sign out** clears the session in your browser.
 
 See the [cockpit sign-in requirements](https://github.com/please-behave/cockpit/tree/main/why/requirements)

@@ -5,7 +5,8 @@ The CLI checks your repository against the rules in `.please/`. Start with
 [configuration guide](configuration.md), run and read them in
 [Running rules](running-rules.md) and let Git run them with
 [Git hooks](git-hooks.md). Use `please publish` to share an attestation from a
-local verification run with the [gateway](gateway.md). For installation, see
+local verification run with the [gateway](gateway.md) and
+`please record release` to [record a release](recording-releases.md). For installation, see
 the [CLI releases](https://github.com/please-behave/cli/releases).
 
 ## Configure publication
