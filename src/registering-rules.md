@@ -80,6 +80,10 @@ The command exits with status `2` for a conflict, member failure, invalid local
 input or receipt, gateway rejection, or transport failure. See the
 [CLI Rule Set registration contract](https://github.com/please-behave/cli/blob/main/why/contracts/report/registration.md#rule-sets).
 
+With CLI v0.25.0 or later, the same `please register` command also
+[registers deployment targets](recording-deployments.md#declare-and-register-a-target)
+after the Rule Sets.
+
 ## Register from GitHub Actions
 
 For API-key authentication, use [Please Behave Action](https://github.com/please-behave/action/blob/main/docs/publishing.md#registering-rule-versions) v1.8.0 or
@@ -118,3 +122,6 @@ The Action registers after the governance run succeeds. Its Job Summary lists
 the step.
 [Attestation delivery](cli.md#publish-from-github-actions) follows its own
 failure policy.
+
+With CLI v0.25.0 or later, `register: 'true'` also includes configured
+deployment targets.

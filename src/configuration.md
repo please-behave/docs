@@ -106,6 +106,9 @@ holds the exact defaults and bounds.
 A run without `--at` selects `pre-push`. Custom names such as `release` have no
 special behavior; you run them with `please run --at release`.
 
+Use top-level `[[targets]]` entries to name the places where your repository
+deploys software. See [Declare and register a target](recording-deployments.md#declare-and-register-a-target).
+
 ## Rules
 
 Each Rule lives in its own directory below `checks/` or `reviews/` and is defined

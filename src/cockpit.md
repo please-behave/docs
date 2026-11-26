@@ -44,7 +44,10 @@ The dashboard and **Attestations** tab refresh every five minutes while the
 browser tab is visible. Use **Refresh** to read again immediately. The
 **Attestations** tab loads older reports as you scroll, and the **Releases**
 tab shows [recorded releases](recording-releases.md#view-releases-in-the-cockpit)
-with their reported evidence. Sessions expire after eight hours.
+with their reported evidence. The
+[Deployments tab](recording-deployments.md#view-deployments-in-the-cockpit)
+shows what was reported on each target and what evidence is available.
+Sessions expire after eight hours.
 **Sign out** clears the session in your browser.
 
 See the [cockpit sign-in requirements](https://github.com/please-behave/cockpit/tree/main/why/requirements)
