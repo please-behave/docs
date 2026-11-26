@@ -23,22 +23,50 @@ with a callback at your cockpit's HTTPS origin followed by
 Set `COCKPIT_BIND_ADDR` if the reverse proxy needs the service to listen on
 a different address than the default `127.0.0.1:8080`.
 
-## View the reported evidence
+## Read the repository dashboard
 
 Open `/sign-in` and sign in with an allowed GitHub account. The dashboard
-shows one tile per repository in the ledger's overview. The top stripe shows
-repository health, and the pill shows the verdict of the latest attestation
-containing the `check` execution point. A repository without such a report
-shows **No evidence**. A pending or overdue tile shows the observed head and
-how long evidence has been missing. Repositories without a fresh covering
-sync show **Unknown**, and repositories outside the inventory show **Not managed**.
-Archived repositories are excluded.
+shows one tile per repository in the ledger's overview. The verdict pill shows
+**PASS**, **FAIL**, or **ERROR** from the newest attestation containing `check`,
+with its reported commit and receipt time below. **No evidence** means no
+attestation containing `check` has been reported for the repository.
+
+The top stripe shows repository health. Each tile also names its state.
+
+| State | Meaning | Health stripe |
+| --- | --- | --- |
+| **Unknown** | No covering sync has completed, the last one is stale, or there is check evidence but no observed head. | Unknown |
+| **Never integrated** | A fresh sync covers the repository, and there is no check evidence. | Failed |
+| **Current** | The observed head has check evidence for that exact commit. | Passed |
+| **Pending** | Check evidence for the observed head is missing within the grace period. | Passed |
+| **Overdue** | The grace period has elapsed. The tile shows the current step and the total number of steps. | Warning until the final step, then failed |
+
+A **FAIL** or **ERROR** verdict makes the stripe failed whenever the state is
+known. For example, a **PASS** pill can appear with a warning stripe when the
+passing check was reported for an earlier commit and the observed head is
+overdue. A pending or overdue tile shows the observed head, how long it has
+been waiting for evidence, and how many heads were observed since evidence.
+The ledger configures the grace period, overdue steps, and sync staleness.
+See the [ledger repository overview contract](https://github.com/please-behave/ledger/blob/main/why/contracts/read/repository-overview.md#heartbeat-and-status).
+
+**Not managed** identifies a repository with attestations and no collector
+inventory entry. It has no covering sync. Archived repositories are hidden.
+Heads are periodic observations, so the count can miss changes between syncs.
+Attestations carry reported evidence. A verdict records what a sender reported
+for a run and carries no proof that a requirement is satisfied.
 
 The dashboard sorts by health severity by default. Its banner counts tiles by
 health and shows the oldest covering sync completion. Select a repository name
 to see its latest attestation for every execution-point combination, recent
 attestations, releases and deployments. Select an attestation's reported time
 to see its rules and outcomes.
+
+When available, a tile includes the newest recorded release version and the
+latest deployment target and receipt time. The completed Rule Set chip shows
+the count, lists the names on hover or focus, and links to the repository page.
+See the [cockpit repository overview contract](https://github.com/please-behave/cockpit/blob/main/why/contracts/browser/repository-overview.md).
+
+## View the reported evidence
 
 The dashboard and **Attestations** tab refresh every five minutes while the
 browser tab is visible. Use **Refresh** to read again immediately. The

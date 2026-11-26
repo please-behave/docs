@@ -5,6 +5,8 @@ attestation and read it back from the ledger. You need Docker with the
 `docker compose` plugin, Git, and [Please Behave CLI](https://github.com/please-behave/cli/releases)
 0.20.0 or later on your `PATH`. The first startup downloads images. The
 publish and read steps use the local stack and synthetic credentials.
+The [optional GitHub collector](#optional-github-collector) adds repository
+inventory and observed heads when you supply a read-only GitHub token.
 
 ## Start the stack
 
@@ -27,6 +29,29 @@ ledger are reachable only on the private Compose network.
   hash of the example key with the sender `example-ci`.
 - The cockpit uses the second published port, `http://127.0.0.1:8081`.
   See [Optional GitHub sign-in](#optional-github-sign-in) for browser access.
+
+## Optional GitHub collector
+
+In `compose/`, create `.env.collector` with the scopes and credentials from
+[Configure the collector](github-collector.md#configure-the-collector). For
+example, replace the owner, repository and token placeholder in your local file.
+
+```dotenv
+GITHUB_COLLECTOR_SCOPES=example-team/sample-app
+GITHUB_COLLECTOR_TOKEN_EXAMPLE_TEAM=replace-with-read-only-token
+```
+
+Add one token variable for each owner you include. Keep the file private and
+out of version control. Compose sets the ledger URL to `http://ledger:8080`
+on the private network. The collector also needs outbound access to GitHub.
+
+```sh
+docker compose --profile collector up -d --wait
+docker compose --profile collector logs github-collector
+```
+
+To see the collected repositories in the dashboard, configure
+[GitHub sign-in](#optional-github-sign-in) for the cockpit separately.
 
 ## Publish an attestation
 
@@ -104,6 +129,6 @@ already sets the ledger URL. Open `/sign-in` at your HTTPS URL.
 From `compose/`, stop the stack and remove its example database volume.
 
 ```sh
-docker compose down --volumes
+docker compose --profile collector down --volumes
 unset PLEASE_GATEWAY_KEY
 ```

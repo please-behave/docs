@@ -4,7 +4,8 @@ set -eu
 compose_dir=$(cd compose && pwd)
 fixture=$(mktemp -d)
 suffix=$(printf '%s' "${fixture##*.}" | LC_ALL=C tr '[:upper:]' '[:lower:]')
-set -- docker compose --env-file /dev/null -f "$compose_dir/compose.yaml" -p "please-example-test-$suffix"
+set -- docker compose --env-file /dev/null --profile collector \
+  -f "$compose_dir/compose.yaml" -f "$fixture/offline.yaml" -p "please-example-test-$suffix"
 
 cleanup() {
   status=$?
@@ -24,6 +25,19 @@ trap 'exit 143' TERM
 unset COCKPIT_GITHUB_CLIENT_ID COCKPIT_GITHUB_CLIENT_SECRET COCKPIT_GITHUB_CALLBACK_URL
 unset COCKPIT_COOKIE_KEY COCKPIT_GITHUB_ALLOWED_IDS
 export NO_PROXY=127.0.0.1 no_proxy=127.0.0.1
+
+cat >"$fixture/offline.yaml" <<'YAML'
+services:
+  github-collector:
+    networks: !override [private]
+YAML
+GITHUB_COLLECTOR_ENV_FILE="$fixture/collector.env"
+export GITHUB_COLLECTOR_ENV_FILE
+cat >"$GITHUB_COLLECTOR_ENV_FILE" <<'ENV'
+GITHUB_COLLECTOR_SCOPES=example-team/sample-app
+GITHUB_COLLECTOR_TOKEN_EXAMPLE_TEAM=synthetic-collector-token
+ENV
+
 "$@" up -d --wait --wait-timeout 90 --pull never --no-build
 
 cd "$fixture"
@@ -106,6 +120,12 @@ for attempt in range(10):
         time.sleep(1)
 
 assert initial == [], f"Expected an empty ledger, got {initial!r}"
+overview_path = "/v0/repositories/overview"
+assert read_ledger(overview_path)["repositories"] == [], "Expected an empty repository overview"
+collector_logs = subprocess.check_output(
+    [*compose, "logs", "--no-color", "github-collector"], text=True, timeout=10,
+)
+assert "GitHub collector started" in collector_logs, "The GitHub collector did not start"
 assert response_status(Request(gateway + "/")) == 404, "Expected HTTP 404 at the gateway root"
 assert response_status(Request(gateway + "/readyz")) == 204, "Expected HTTP 204 from gateway readiness"
 subprocess.run(["please", "publish", "--gateway-url", gateway], check=True, timeout=30)
@@ -126,7 +146,17 @@ for field, value in {**expected, "sender": "example-ci"}.items():
 
 results = [{"id": "repository-readme", "kind": "check", "status": "PASS"}]
 detail = read_ledger(f"{path}/{attestation_id}")
-assert detail == {**summary, "results": results}, f"Unexpected attestation detail: {detail!r}"
+verification = {"status": "unverified", "reason": "unregistered"}
+assert detail == {
+    **summary, "rule_sets": [], "results": [{**results[0], "verification": verification}],
+}, f"Unexpected attestation detail: {detail!r}"
+
+repositories = read_ledger(overview_path)["repositories"]
+assert len(repositories) == 1, f"Expected one repository, got {repositories!r}"
+entry = repositories[0]
+assert entry["repository"] == expected["repository"], entry
+assert entry["managed"] is False and entry["state"] == "unknown", entry
+assert entry["latest_check"]["overall"] == "PASS", entry
 
 key = os.environ["PLEASE_GATEWAY_KEY"]
 payload = {"schema_version": 1, **expected, "results": results}
@@ -139,5 +169,5 @@ for label, request_key, body, expected_status in [
     assert status == expected_status, f"{label}: expected HTTP {expected_status}, got {status}"
     assert read_ledger(latest) == stored, f"{label}: the rejected request changed the ledger"
 
-print("The example published and read back an attestation and rejected invalid requests")
+print("The example started the collector, published and read back an attestation, and rejected invalid requests")
 PY

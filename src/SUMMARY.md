@@ -14,5 +14,6 @@
     - [External Rule Sets](external-rule-sets.md)
   - [Gateway](gateway.md)
   - [Ledger](ledger.md)
+  - [GitHub collector](github-collector.md)
   - [Cockpit](cockpit.md)
 - [Docker Compose example](example-setup.md)

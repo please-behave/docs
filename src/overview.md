@@ -22,6 +22,11 @@ the purpose and principles behind this approach.
    the latest reported attestation for each repository and execution-point
    combination and open its individual rule results.
 
+The [GitHub collector](github-collector.md) independently sends the ledger a
+repository inventory and observations of default-branch heads. This lets the
+[dashboard](cockpit.md#read-the-repository-dashboard) show repositories that
+have never reported check evidence.
+
 ## Evidence and its limits
 
 An attestation carries the report format version, repository identity, saved

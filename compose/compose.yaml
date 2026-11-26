@@ -17,7 +17,7 @@ services:
     networks: [private]
 
   migrate:
-    image: &ledger-image ghcr.io/please-behave/ledger:v0.6.0@sha256:7cb5c63abaff4ffb936098919e8ecdb118a3180fa94860dde41b3dc0e4a39b86
+    image: &ledger-image ghcr.io/please-behave/ledger:v0.20.0@sha256:ab85bbf8ea72905f2f3aaaf3467ac44edcc66d1132dc715cce9a1a822730d609
     command: ["migrate"]
     environment: &ledger-environment
       LEDGER_DATABASE_URL: postgresql://ledger:example-password@postgres:5432/ledger
@@ -59,6 +59,18 @@ services:
       - ledger
     ports:
       - "127.0.0.1:8081:8080"
+    networks: [default, private]
+
+  github-collector:
+    image: ghcr.io/please-behave/github-collector:v0.1.0@sha256:efd8d5ab73718db163e0c2f1b27f2ef675f8b3db5140029e0f6745795c2f8bd6
+    profiles: [collector]
+    env_file:
+      - path: "${GITHUB_COLLECTOR_ENV_FILE:-.env.collector}"
+        required: false
+    environment:
+      GITHUB_COLLECTOR_LEDGER_URL: http://ledger:8080
+    depends_on:
+      - ledger
     networks: [default, private]
 
 networks:

@@ -10,7 +10,7 @@
   Cover example setups with integration tests.
 - CI runs the Compose integration test as its own check. To run it locally, start Docker
   with the Compose plugin and leave loopback ports 8080 and 8081 free. Run
-  `mise install` and `docker compose -f compose/compose.yaml pull` to prepare, then
+  `mise install` and `docker compose -f compose/compose.yaml --profile collector pull` to prepare, then
   `mise run test-example` to run offline with synthetic credentials. The test prints
   container logs on failure and removes its containers, networks, and database volume.
 - The rule and adapter examples live in `examples/`. `mise run test-rule-examples` validates them against the pinned CLI, offline. Keep that test in step with the examples.

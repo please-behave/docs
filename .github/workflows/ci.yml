@@ -28,7 +28,7 @@ jobs:
           experimental: true
           version: 2026.11.11
       - name: Pull pinned example images
-        run: docker compose -f compose/compose.yaml pull
+        run: docker compose -f compose/compose.yaml --profile collector pull
       - name: Run the offline integration test
         run: mise run test-example
   rule-examples:
