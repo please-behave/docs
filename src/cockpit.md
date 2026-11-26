@@ -25,13 +25,27 @@ a different address than the default `127.0.0.1:8080`.
 
 ## View the reported evidence
 
-Open `/sign-in` and sign in with an allowed GitHub account. The overview
-shows the latest attestation for each repository and execution-point
-combination, with errors and failures first. Select a repository link to
-see the rule IDs, kinds, and outcomes in that attestation. The Releases tab
-shows [recorded releases](recording-releases.md#view-releases-in-the-cockpit)
-with their reported evidence. Sessions expire
-after eight hours. **Sign out** clears the session in your browser.
+Open `/sign-in` and sign in with an allowed GitHub account. The dashboard
+shows one tile per repository in the ledger's overview. The top stripe shows
+repository health, and the pill shows the verdict of the latest attestation
+containing the `check` execution point. A repository without such a report
+shows **No evidence**. A pending or overdue tile shows the observed head and
+how long evidence has been missing. Repositories without a fresh covering
+sync show **Unknown**, and repositories outside the inventory show **Not managed**.
+Archived repositories are excluded.
+
+The dashboard sorts by health severity by default. Its banner counts tiles by
+health and shows the oldest covering sync completion. Select a repository name
+to see its latest attestation for every execution-point combination, recent
+attestations, releases and deployments. Select an attestation's reported time
+to see its rules and outcomes.
+
+The dashboard and **Attestations** tab refresh every five minutes while the
+browser tab is visible. Use **Refresh** to read again immediately. The
+**Attestations** tab loads older reports as you scroll, and the **Releases**
+tab shows [recorded releases](recording-releases.md#view-releases-in-the-cockpit)
+with their reported evidence. Sessions expire after eight hours.
+**Sign out** clears the session in your browser.
 
 See the [cockpit sign-in requirements](https://github.com/please-behave/cockpit/tree/main/why/requirements)
 and the [ledger read contracts](https://github.com/please-behave/ledger/tree/main/why/contracts/read).
