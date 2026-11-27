@@ -46,7 +46,7 @@ services:
     networks: [default, private]
 
   cockpit:
-    image: ghcr.io/please-behave/cockpit:v0.17.0@sha256:a437877d8793aeeb85b04b8107dfefcfd80f39b9a96e8acc61b21b866017d81e
+    image: ghcr.io/please-behave/cockpit:v0.19.0@sha256:fe2efa705cc9a83f37c3cefdb938cb849c2748aaecfdf9914a48d8aafcef85a3
     environment:
       COCKPIT_BIND_ADDR: 0.0.0.0:8080
       COCKPIT_LEDGER_URL: http://ledger:8080
