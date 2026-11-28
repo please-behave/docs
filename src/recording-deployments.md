@@ -108,10 +108,14 @@ version and a commit fails the step regardless of that setting. See the
 ## View deployments in the cockpit
 
 The **Deployments** tab shows the latest deployment the ledger received for
-each target owner, target name and deployed repository. Each row shows when
-the ledger received the report and what version or commit it names. Recorded
-versions link to the release detail. Commit-only reports show the short commit
-ID with the full ID available in a tooltip.
+each target owner, target name and deployed repository, with one row per
+deployment. Each row shows when the ledger received the report, its version
+or commit, its evidence status, and the count of completed Rule Sets when
+there are any. Recorded versions link to the release detail. Commit-only
+reports show the short commit ID with the full ID available in a tooltip.
+
+Open the **Completed Rule Sets** summary to preview the linked chips.
+Select a chip to open the bound version of that Rule Set.
 
 The tab groups by target by default. Switch to grouping by repository or
 combine filters for target, repository and evidence status. Group headings
@@ -128,7 +132,7 @@ and the [repository page requirement](https://github.com/please-behave/cockpit/b
 
 | State | Meaning |
 | --- | --- |
-| Reported outcome | The ledger found an attestation for the deployed repository and commit that includes the `check` execution point. The view shows the newest qualifying attestation's overall result and links to completed Rule Sets. |
+| Reported outcome | The ledger found an attestation for the deployed repository and commit that includes the `check` execution point. The view shows the newest qualifying attestation's overall result. |
 | No evidence | The commit is known, but there is no attestation for it that includes the `check` execution point in that repository. |
 | Release not recorded | The reported version has no matching release fact yet, so the ledger cannot resolve it to a commit. |
 

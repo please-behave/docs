@@ -26,51 +26,93 @@ a different address than the default `127.0.0.1:8080`.
 ## Read the repository dashboard
 
 Open `/sign-in` and sign in with an allowed GitHub account. The dashboard
-shows one tile per repository in the ledger's overview. The verdict pill shows
-**PASS**, **FAIL**, or **ERROR** from the newest attestation containing `check`,
-with its reported commit and receipt time below. **No evidence** means no
-attestation containing `check` has been reported for the repository.
+shows which repositories need attention, why they need it, and what the
+ledger has received recently.
 
-The top stripe shows repository health. Each tile also names its state.
+### Repository health
 
-| State | Meaning | Health stripe |
+The status tiles count **Failed**, **Warning**, **Unknown**, and **Passed**
+repositories across the whole overview. Hover over a tile or focus it with
+the keyboard to preview up to three matching names and see how many more
+match. Select a tile to filter the **Repository map** by that status. On a
+touch screen, a tap on a tile with a preview opens it, and the next tap
+applies the filter. The filter is part of the URL, so you can share the
+filtered view. Select **Clear status filter** in the map to show all
+repositories again. The counts, **Needs attention**, and **Recent activity**
+keep their full scope.
+
+The toolbar shows the oldest covering sync completion, marks it when stale,
+and reports when no covering sync has completed. Archived repositories are
+excluded from the overview.
+
+| State | Meaning | Health |
 | --- | --- | --- |
 | **Unknown** | No covering sync has completed, the last one is stale, or there is check evidence but no observed head. | Unknown |
 | **Never integrated** | A fresh sync covers the repository, and there is no check evidence. | Failed |
 | **Current** | The observed head has check evidence for that exact commit. | Passed |
 | **Pending** | Check evidence for the observed head is missing within the grace period. | Passed |
-| **Overdue** | The grace period has elapsed. The tile shows the current step and the total number of steps. | Warning until the final step, then failed |
+| **Overdue** | The grace period has elapsed. | Warning until the final step, then Failed |
 
-A **FAIL** or **ERROR** verdict makes the stripe failed whenever the state is
-known. For example, a **PASS** pill can appear with a warning stripe when the
-passing check was reported for an earlier commit and the observed head is
-overdue. A pending or overdue tile shows the observed head, how long it has
-been waiting for evidence, and how many heads were observed since evidence.
-The ledger configures the grace period, overdue steps, and sync staleness.
+For a known state, a **FAIL** or **ERROR** verdict makes the repository's
+health **Failed**. The verdict comes from the newest attestation that
+includes `check`. A repository can show **Warning** alongside a **PASS**
+verdict when the passing check was reported for an earlier commit and the
+observed head is overdue. The ledger configures the grace period, overdue
+steps, and sync staleness.
 See the [ledger repository overview contract](https://github.com/please-behave/ledger/blob/main/why/contracts/read/repository-overview.md#heartbeat-and-status).
 
-**Not managed** identifies a repository with attestations and no collector
-inventory entry. It has no covering sync. Archived repositories are hidden.
-Heads are periodic observations, so the count can miss changes between syncs.
-Attestations carry reported evidence. A verdict records what a sender reported
-for a run and carries no proof that a requirement is satisfied.
+### Needs attention
 
-The dashboard sorts by health severity by default. Its banner counts tiles by
-health and shows the oldest covering sync completion. Select a repository name
-to see its latest attestation for every execution-point combination, recent
-attestations, releases and deployments. Select an attestation's reported time
-to see its rules and outcomes.
+**Needs attention** lists failed repositories first, followed by those with
+warnings and those with unknown health. Each row links to the repository and
+explains why it needs attention. A reported failure or error shows the
+verdict, commit, and receipt time. An overdue repository without a failing
+verdict shows the current and total overdue steps. If every repository is
+passing, the widget shows how many it checked.
 
-When available, a tile includes the newest recorded release version and the
-latest deployment target and receipt time. The completed Rule Set chip shows
-the count, lists the names on hover or focus, and links to the repository page.
+### Repository map
+
+The map shows a chip for each repository. When the overview spans multiple
+organizations, the map groups the chips by organization and shows each
+group's health counts for the full overview. A status filter hides groups
+with no matches.
+
+Hover over a chip, focus it with the keyboard, or tap it once to preview the
+full repository name, health, state, and latest check verdict. **Not
+managed** identifies a repository with attestations and no collector inventory
+entry. **No evidence** means the ledger has no attestation that includes
+`check` for the repository. When there is evidence, the preview shows the
+reported commit and receipt time. For a pending or overdue head, it shows
+the head commit, how long it has been waiting for evidence, and how many
+heads the collector has observed since the last evidence. The count can
+miss changes between syncs.
+
+When available, the preview links to the latest recorded release and the
+bound versions of completed Rule Sets, and shows the latest deployment
+target and receipt time. Follow the chip link to the repository page to see
+its latest attestation for each execution-point combination, recent
+attestations, releases, and deployments. On a touch screen, tap the chip
+again to follow the link. Select an attestation's reported time to see
+its rules and outcomes.
 See the [cockpit repository overview contract](https://github.com/please-behave/cockpit/blob/main/why/contracts/browser/repository-overview.md).
+
+### Recent activity
+
+**Recent activity** combines up to ten of the newest attestations, releases,
+and deployments, ordered by when the ledger received them. Each entry shows
+its kind, a link to the repository, the verdict, release version, or deployment
+target, and how long ago the ledger received it. If a read fails, the feed
+keeps the last entries it received for that kind and identifies the affected
+kind.
 
 ## View the reported evidence
 
-The dashboard and **Attestations** tab refresh every five minutes while the
-browser tab is visible. Use **Refresh** to read again immediately. The
-**Attestations** tab loads older reports as you scroll, and the **Releases**
+The dashboard and **Attestations** tab refresh while the browser tab is
+visible. The default interval is five minutes. Use **Refresh interval** to
+change it or **Refresh** to read again immediately. A dashboard refresh
+keeps the active status filter.
+
+The **Attestations** tab loads older reports as you scroll, and the **Releases**
 tab shows [recorded releases](recording-releases.md#view-releases-in-the-cockpit)
 with their reported evidence. The
 [Deployments tab](recording-deployments.md#view-deployments-in-the-cockpit)

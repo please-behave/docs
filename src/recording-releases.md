@@ -71,15 +71,21 @@ failure, including a conflict, is a warning unless `publish-required` is
 
 ## View releases in the cockpit
 
-The **Releases** tab lists every repository with at least one recorded
-release: its newest version, when it was recorded and its evidence. Entries
-without evidence or with a `FAIL` or `ERROR` outcome come first, then the
-rest by repository. Repositories without a release do not appear. A repository
-opens the page of its releases, newest first, and a version opens the release
-detail page. The detail page shows the version, the full commit, the time the
-ledger received the fact and the sender with its authentication method. A
-sender that authenticated with an API key is marked as self-asserted, because
-the key is not bound to the repository.
+The **Releases** tab shows one row per repository with a recorded release.
+Each row shows the newest version, when the ledger received it, its evidence
+status, and the count of completed Rule Sets when there are any. Repositories
+without evidence or with a `FAIL` or `ERROR` outcome appear first. Within
+each group, rows are ordered by repository name.
+
+Select the repository name to open its release history, with one row per
+release in ledger receipt order, newest first. Hover over the count in
+**Completed Rule Sets** or focus it with the keyboard to preview the linked
+chips. Select a chip to open the bound version of that Rule Set.
+
+Select a version to open the release detail page. It shows the version, the
+full commit, the ledger receipt time, and the sender with its authentication
+method. A sender that authenticated with an API key is marked as
+self-asserted, because the key is not bound to the repository.
 
 ### What the evidence of a release means
 
